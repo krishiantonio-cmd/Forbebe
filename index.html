@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Farmàcia del Cor 💊 for Josep</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Figtree:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --mint: #CDEFE0;
+    --mint-2: #B4E4CF;
+    --teal: #1F4E4A;
+    --pink: #F4A3B5;
+    --pink-d: #D9718B;
+    --butter: #FFE08A;
+    --paper: #FFFFFF;
+    --muted: #4C7470;
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--teal);
+    background-color: var(--mint);
+    background-image: radial-gradient(var(--mint-2) 2px, transparent 2.5px);
+    background-size: 26px 26px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2.25rem 1.25rem 2rem;
+    overflow-x: hidden;
+  }
+
+  .sign {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: var(--teal);
+    color: var(--mint);
+    border-radius: 999px;
+    padding: .35rem 1rem .35rem .45rem;
+    font-weight: 700;
+    font-size: .95rem;
+    margin-bottom: 1.1rem;
+  }
+  .sign .cross {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--pink); color: var(--teal);
+    display: grid; place-items: center; font-size: 1.05rem; line-height: 1;
+  }
+  h1 {
+    font-family: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+    font-weight: 400;
+    font-size: clamp(2.3rem, 9.5vw, 3.8rem);
+    line-height: 1.02;
+    margin: 0 0 .8rem;
+    max-width: 13ch;
+    color: var(--teal);
+  }
+  .lede { font-size: 1.08rem; line-height: 1.5; max-width: 33ch; margin: 0 auto 1.75rem; color: var(--muted); }
+
+  /* ---------- Machine ---------- */
+  .stage { position: relative; width: min(78vw, 290px); margin: 0 auto; }
+  .stage svg { width: 100%; height: auto; display: block; overflow: visible; }
+  #knob { transform-box: view-box; transform-origin: 150px 300px; transition: transform .8s cubic-bezier(.5,0,.3,1); }
+  #pills { transform-box: view-box; transform-origin: 150px 140px; }
+  #pills.shake { animation: shake .8s ease-in-out; }
+  @keyframes shake {
+    0%,100% { transform: none; }
+    20% { transform: rotate(-4deg) translateY(-3px); }
+    45% { transform: rotate(5deg) translateY(2px); }
+    70% { transform: rotate(-3deg); }
+  }
+
+  .tray { position: relative; height: 70px; margin-top: -6px; }
+  .capsule {
+    position: absolute;
+    left: 50%;
+    top: -58px;
+    width: 76px; height: 38px;
+    margin-left: -38px;
+    border: 0; padding: 0; background: none;
+    cursor: pointer;
+    display: none;
+    filter: drop-shadow(0 4px 0 rgba(31,78,74,.25));
+  }
+  .capsule.drop { display: block; animation: drop .75s cubic-bezier(.3,1.6,.5,1) forwards; }
+  @keyframes drop { from { transform: translateY(-20px) rotate(-30deg); opacity: 0; } 40% { opacity: 1; } to { transform: translateY(70px) rotate(-8deg); } }
+  .capsule .half {
+    position: absolute; top: 0; width: 50%; height: 100%;
+    border: 3px solid var(--teal);
+    transition: transform .45s cubic-bezier(.3,1.4,.5,1), opacity .45s;
+  }
+  .capsule .l { left: 0; border-radius: 20px 0 0 20px; border-right-width: 1.5px; }
+  .capsule .r { right: 0; border-radius: 0 20px 20px 0; border-left-width: 1.5px; background: var(--paper); }
+  .capsule .l::after {
+    content: ""; position: absolute; top: 6px; left: 9px; width: 12px; height: 5px;
+    border-radius: 4px; background: rgba(255,255,255,.65);
+  }
+  .capsule.open .l { transform: translate(-34px, -10px) rotate(-35deg); opacity: 0; }
+  .capsule.open .r { transform: translate(34px, -10px) rotate(35deg); opacity: 0; }
+  .capsule:focus-visible { outline: 3px solid var(--teal); outline-offset: 6px; border-radius: 22px; }
+  .capsule.wiggle { animation: wiggle 1.4s ease-in-out infinite; transform: translateY(70px) rotate(-8deg); }
+  @keyframes wiggle { 0%,100% { transform: translateY(70px) rotate(-8deg); } 50% { transform: translateY(66px) rotate(6deg); } }
+
+  .turn {
+    font-family: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+    font-size: 1.3rem;
+    color: var(--teal);
+    background: var(--butter);
+    border: 3px solid var(--teal);
+    border-radius: 999px;
+    padding: .75rem 2rem;
+    margin-top: 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--teal);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .turn:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--teal); }
+  .turn:disabled { opacity: .5; cursor: default; transform: none; box-shadow: 0 5px 0 var(--teal); }
+  .turn:focus-visible { outline: 3px solid var(--pink-d); outline-offset: 4px; }
+  .hint { min-height: 1.5em; margin: .9rem 0 0; color: var(--muted); font-weight: 500; }
+
+  /* ---------- Prescription label ---------- */
+  .rx {
+    display: none;
+    width: min(92vw, 380px);
+    margin: 2rem auto 0;
+    background: var(--paper);
+    border: 3px solid var(--teal);
+    border-radius: 14px;
+    box-shadow: 0 6px 0 var(--teal);
+    text-align: left;
+    overflow: hidden;
+  }
+  .rx.show { display: block; animation: unfold .55s cubic-bezier(.2,1.3,.4,1) both; transform-origin: top center; }
+  @keyframes unfold { from { transform: scaleY(.1) rotate(-2deg); opacity: 0; } to { transform: none; opacity: 1; } }
+  .rx header {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--teal); color: var(--mint);
+    padding: .6rem 1rem; font-weight: 700; font-size: .95rem;
+  }
+  .rx .body { padding: 1.1rem 1.2rem 1.2rem; }
+  .rx .row { display: grid; grid-template-columns: 6.5rem 1fr; gap: .5rem; padding: .45rem 0; border-bottom: 1.5px dashed #cfe3dd; line-height: 1.4; }
+  .rx .row:last-of-type { border-bottom: 0; }
+  .rx .k { color: var(--muted); font-size: .9rem; padding-top: .1rem; }
+  .rx .v { font-weight: 500; }
+  .rx .med {
+    display: flex; gap: .8rem; align-items: center; margin-bottom: .6rem;
+  }
+  .rx .med .e { font-size: 2.6rem; line-height: 1; }
+  .rx .med h2 {
+    font-family: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+    font-weight: 400; font-size: 1.55rem; line-height: 1.1; margin: 0;
+  }
+  .rx .sig { text-align: right; margin-top: .8rem; font-size: .95rem; color: var(--pink-d); font-weight: 700; }
+
+  /* ---------- Bag ---------- */
+  .bag { width: min(92vw, 380px); margin: 2.4rem auto 0; text-align: left; display: none; }
+  .bag.show { display: block; }
+  .bag h3 {
+    font-family: "Bagel Fat One", "Arial Rounded MT Bold", system-ui, sans-serif;
+    font-weight: 400; font-size: 1.4rem; margin: 0 0 .3rem;
+  }
+  .bag p { margin: 0 0 .9rem; color: var(--muted); font-size: .95rem; line-height: 1.4; }
+  .bag ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .55rem; }
+  .bag li button {
+    width: 100%;
+    display: flex; align-items: center; gap: .7rem;
+    background: var(--paper);
+    border: 2.5px solid var(--teal);
+    border-radius: 999px;
+    padding: .55rem 1rem .55rem .6rem;
+    font: 500 1rem "Figtree", system-ui, sans-serif;
+    color: var(--teal);
+    text-align: left;
+    cursor: pointer;
+  }
+  .bag li button:focus-visible { outline: 3px solid var(--pink-d); outline-offset: 3px; }
+  .bag .dot { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 1.1rem; flex: none; }
+  .bag .t { flex: 1; }
+  .bag .check { font-size: .85rem; color: var(--muted); flex: none; }
+  .bag li.taken button { background: transparent; border-style: dashed; }
+  .bag li.taken .t { text-decoration: line-through; opacity: .6; }
+  .bag li.taken .check { color: var(--pink-d); font-weight: 700; }
+
+  footer { margin-top: auto; padding-top: 3rem; color: var(--muted); font-size: .95rem; user-select: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    #knob { transition-duration: .2s; }
+    #pills.shake, .capsule.drop, .capsule.wiggle, .rx.show { animation: none; }
+    .capsule.drop, .capsule.wiggle { transform: translateY(70px) rotate(-8deg); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sign"><span class="cross">✚</span>Farmàcia del Cor</div>
+  <h1>Get well soon, Josep</h1>
+  <p class="lede">Your personal pharmacist has prepared some medicine. Turn the knob, catch the pill, and open it to see your prescription.</p>
+
+  <div class="stage">
+    <svg viewBox="0 0 300 400" aria-hidden="true">
+      <defs>
+        <clipPath id="dome"><circle cx="150" cy="140" r="100"/></clipPath>
+      </defs>
+      <!-- lid -->
+      <rect x="118" y="18" width="64" height="24" rx="10" fill="#F4A3B5" stroke="#1F4E4A" stroke-width="5"/>
+      <!-- glass -->
+      <circle cx="150" cy="140" r="104" fill="#FFFFFF" fill-opacity=".55" stroke="#1F4E4A" stroke-width="6"/>
+      <g clip-path="url(#dome)"><g id="pills"></g></g>
+      <path d="M92 92 A72 72 0 0 1 132 62" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" opacity=".9"/>
+      <!-- body -->
+      <path d="M70 236 H230 L246 384 Q247 394 236 394 H64 Q53 394 54 384 Z" fill="#F4A3B5" stroke="#1F4E4A" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="62" y="226" width="176" height="20" rx="8" fill="#FFE08A" stroke="#1F4E4A" stroke-width="5"/>
+      <!-- knob -->
+      <g id="knob">
+        <circle cx="150" cy="300" r="30" fill="#FFE08A" stroke="#1F4E4A" stroke-width="5"/>
+        <rect x="124" y="294" width="52" height="12" rx="6" fill="#FFFFFF" stroke="#1F4E4A" stroke-width="4"/>
+        <circle cx="150" cy="300" r="5" fill="#1F4E4A"/>
+      </g>
+      <!-- chute -->
+      <rect x="118" y="346" width="64" height="38" rx="10" fill="#1F4E4A"/>
+      <rect x="126" y="352" width="48" height="10" rx="5" fill="#2E6A64"/>
+    </svg>
+    <div class="tray">
+      <button class="capsule" id="capsule" aria-label="Open the pill">
+        <span class="half l" id="capL"></span><span class="half r"></span>
+      </button>
+    </div>
+  </div>
+
+  <button class="turn" id="turn">Turn the knob</button>
+  <p class="hint" id="hint" aria-live="polite"></p>
+
+  <article class="rx" id="rx" aria-live="polite">
+    <header><span>✚ Farmàcia del Cor</span><span id="rxNo"></span></header>
+    <div class="body">
+      <div class="med"><span class="e" id="rxE"></span><h2 id="rxT"></h2></div>
+      <div class="row"><span class="k">Patient</span><span class="v">Josep, my favourite one</span></div>
+      <div class="row"><span class="k">Directions</span><span class="v" id="rxD"></span></div>
+      <div class="row"><span class="k">Refills</span><span class="v" id="rxR"></span></div>
+      <div class="sig">Prescribed with love ♥</div>
+    </div>
+  </article>
+
+  <section class="bag" id="bag">
+    <h3>Your prescriptions</h3>
+    <p>Tap one when you’ve taken it, and come find me to cash in the rest.</p>
+    <ul id="bagList"></ul>
+  </section>
+
+  <footer id="footer">Rest up. I’ve got you ♥</footer>
+
+<script>
+(() => {
+  const MEDS = [
+    { id: "soup",   e: "🍲", c: "#FFE08A", t: "One big bowl of soup",
+      d: "Eat slowly on the couch, under a blanket. Slurping is allowed.", r: "Until the pot is empty" },
+    { id: "tea",    e: "🍯", c: "#F9C784", t: "Tea with honey and lemon",
+      d: "Sip while warm. To request a refill, just sigh dramatically.", r: "Unlimited" },
+    { id: "head",   e: "💆‍♂️", c: "#F4A3B5", t: "A gentle head rub",
+      d: "Close your eyes, lie back and let me do the rest. Ten minutes, or until you fall asleep.", r: "As needed" },
+    { id: "massage", e: "🌿", c: "#B8E6C9", t: "30-minute full body massage",
+      d: "Warm oil, soft music, head to toe. Gentle pressure only, doctor’s orders. Take when you feel up to it.", r: "One full dose, redeemable anytime" },
+    { id: "nap",    e: "😴", c: "#C9B8F0", t: "One uninterrupted nap",
+      d: "Phone on silent. I’ll guard the door and keep the house quiet.", r: "Take twice daily" },
+    { id: "cuddle", e: "🫂", c: "#FFB8A1", t: "Unlimited cuddles",
+      d: "Apply generously. Side effects may include feeling very, very loved.", r: "Forever" },
+    { id: "kiss",   e: "💋", c: "#F7A6C8", t: "Forehead kisses",
+      d: "Administered every time you look sad. Germs don’t scare me.", r: "Unlimited" }
+  ];
+  const GOLD = { id: "raincheck", e: "🎟️", c: "#F5C76B", t: "Rain check: your spa prize",
+      d: "Your massage and facial prize isn’t going anywhere. It’s waiting for you the moment you’re back on your feet.", r: "Valid once you’re well" };
+  const ALL = [...MEDS, GOLD];
+  const byId = Object.fromEntries(ALL.map(m => [m.id, m]));
+  const KEY = "josep-farmacia-v1";
+
+  const $ = id => document.getElementById(id);
+  const knob = $("knob"), pills = $("pills"), turn = $("turn"), hint = $("hint");
+  const capsule = $("capsule"), capL = $("capL"), rx = $("rx"), bag = $("bag"), bagList = $("bagList");
+
+  const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || { drawn: [], taken: [] }; } catch { return { drawn: [], taken: [] }; } };
+  const save = s => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch {} };
+  let state = load();
+
+  // ---------- Pills in the dome ----------
+  const pillColors = ["#F4A3B5", "#FFE08A", "#A9D8F5", "#C9B8F0", "#FFB8A1", "#F7A6C8", "#F9C784"];
+  function drawPills() {
+    const left = ALL.length - state.drawn.length;
+    const count = Math.max(0, left * 4 - 2);
+    let g = "";
+    for (let i = 0; i < count; i++) {
+      const row = Math.floor(i / 6), col = i % 6;
+      const x = 72 + col * 30 + (row % 2) * 14 + (Math.sin(i * 7.3) * 6);
+      const y = 222 - row * 20 + (Math.cos(i * 3.1) * 4);
+      const rot = (i * 47) % 180 - 90;
+      const c = pillColors[i % pillColors.length];
+      g += `<g transform="translate(${x} ${y}) rotate(${rot})">
+        <rect x="-14" y="-7" width="28" height="14" rx="7" fill="#FFFFFF" stroke="#1F4E4A" stroke-width="2.5"/>
+        <path d="M0 -7 H-7 A7 7 0 0 0 -7 7 H0 Z" fill="${c}" stroke="#1F4E4A" stroke-width="2.5"/>
+      </g>`;
+    }
+    pills.innerHTML = g;
+  }
+
+  // ---------- Bag ----------
+  function renderBag() {
+    bagList.innerHTML = "";
+    state.drawn.forEach(id => {
+      const m = byId[id];
+      const taken = state.taken.includes(id);
+      const li = document.createElement("li");
+      if (taken) li.className = "taken";
+      li.innerHTML = `<button aria-pressed="${taken}">
+        <span class="dot" style="background:${m.c}">${m.e}</span>
+        <span class="t">${m.t}</span>
+        <span class="check">${taken ? "Taken ✓" : "Tap when taken"}</span>
+      </button>`;
+      li.querySelector("button").addEventListener("click", () => {
+        state.taken = taken ? state.taken.filter(x => x !== id) : [...state.taken, id];
+        save(state); renderBag();
+      });
+      bagList.appendChild(li);
+    });
+    bag.classList.toggle("show", state.drawn.length > 0);
+  }
+
+  function showRx(m) {
+    $("rxNo").textContent = `Rx no. ${state.drawn.length}`;
+    $("rxE").textContent = m.e;
+    $("rxT").textContent = m.t;
+    $("rxD").textContent = m.d;
+    $("rxR").textContent = m.r;
+    rx.classList.remove("show"); void rx.offsetWidth; rx.classList.add("show");
+  }
+
+  function updateControls() {
+    const done = state.drawn.length >= ALL.length;
+    turn.disabled = done;
+    if (done) {
+      turn.textContent = "All out";
+      hint.textContent = "The pharmacy is empty. Now rest, I’ll bring everything to you.";
+    }
+  }
+
+  // ---------- Dispense ----------
+  let turns = 0, current = null;
+  function dispense() {
+    const remaining = MEDS.filter(m => !state.drawn.includes(m.id));
+    current = remaining.length ? remaining[Math.floor(Math.random() * remaining.length)] : GOLD;
+
+    turn.disabled = true;
+    hint.textContent = "Clunk, clunk…";
+    turns++;
+    knob.style.transform = `rotate(${turns * 360}deg)`;
+    pills.classList.remove("shake"); void pills.getBBox(); pills.classList.add("shake");
+
+    setTimeout(() => {
+      capL.style.background = current.c;
+      capsule.className = "capsule drop";
+      setTimeout(() => {
+        capsule.classList.add("wiggle");
+        hint.textContent = current === GOLD ? "A golden pill! Tap it to open." : "Tap the pill to open it.";
+        capsule.focus({ preventScroll: true });
+      }, 750);
+    }, 800);
+  }
+
+  capsule.addEventListener("click", () => {
+    if (!current || capsule.classList.contains("open")) return;
+    capsule.classList.remove("wiggle");
+    capsule.classList.add("open");
+    state.drawn.push(current.id);
+    save(state);
+    const m = current; current = null;
+    setTimeout(() => {
+      capsule.className = "capsule";
+      showRx(m);
+      renderBag();
+      drawPills();
+      hint.textContent = state.drawn.length < ALL.length ? "Doctor’s orders. Want another?" : "";
+      turn.textContent = "Turn again";
+      turn.disabled = false;
+      updateControls();
+      setTimeout(() => rx.scrollIntoView({ behavior: "smooth", block: "center" }), 200);
+    }, 450);
+  });
+
+  turn.addEventListener("click", dispense);
+
+  // Secret reset: double-click / double-tap the footer
+  $("footer").addEventListener("dblclick", () => {
+    try { localStorage.removeItem(KEY); } catch {}
+    location.reload();
+  });
+
+  // ---------- Init ----------
+  drawPills();
+  renderBag();
+  if (state.drawn.length) {
+    turn.textContent = "Turn again";
+    hint.textContent = "Welcome back to the pharmacy.";
+  }
+  updateControls();
+})();
+</script>
+</body>
+</html>
